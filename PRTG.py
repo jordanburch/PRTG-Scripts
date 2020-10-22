@@ -14,7 +14,6 @@ prtg_clone_group = C['PRTG_CLONE_GROUP']
 prtg_automation_group = C['PRTG_AUTOMATION_GROUP']
 
 def prtg_request_json(request):
-    print(request)
     r = requests.get(prtg_url + request + '&username=' + prtg_un + '&passhash=' + prtg_passhash + '&output=json', verify = False)
     return r.json()
 
@@ -70,6 +69,11 @@ def get_all_paginated_sensors():
         sensors += val[1]['sensors']
 
     return sensors
+
+def get_all_sensors_for_device(device_id):
+    r = prtg_request_json('table.json?content=sensors&columns=objid,type,probe,group,parentid,device,sensor,status,message,lastvalue,priority,favorite&filter_parentid=' + str(device_id))
+
+    return r['sensors']
 
 def get_all_groups():
     r = prtg_request_json('table.json?content=groups&columns=objid,group,name,parentid')
